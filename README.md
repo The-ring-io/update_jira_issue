@@ -12,3 +12,18 @@ Note that the folder name is optional, so a branch named `JIRA-00_My-branch-desc
 Then, call this JIRA action while providing a valid status you want your issue to be migrated to.
 
 Example of call:
+
+```yaml
+    - name: Update JIRA status
+      uses: The-ring-io/update_jira_issue@v1
+      with:
+        # This is the base URL of your company's JIRA server like https://the-ring-io.atlassian.net/
+        jira-base-url: ${{ secrets.JIRA_BASE_URL }}
+        # This is the JIRA Api token value, used for the webservice calls made to change issue statuses
+        # See https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/ 
+        jira-api-token: ${{ secrets.JIRA_API_TOKEN }}
+        # This is the user email address associated 
+        jira-user-email: ${{ secrets.JIRA_USER_EMAIL }} 
+        # This is the name of the new status you want to set
+        jira-status: 'Dev in progress'
+```

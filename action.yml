@@ -1,6 +1,18 @@
 name: 'Update JIRA Issue'
 description: 'Extract jira issue ID from branch name and updates the associated issue'
 inputs:
+  jira-base-url:  
+    description: 'JIRA base URL like https://the-ring-io.atlassian.net/'
+    required: false
+    default: 'https://the-ring-io.atlassian.net/'
+  jira-user-email:  
+    description: 'JIRA user email associated with the jira token'
+    required: true
+    default: ''
+  jira-api-token:  
+    description: 'JIRA API token associated with the user email'
+    required: true
+    default: ''
   jira-status:  
     description: 'New JIRA status'
     required: true
@@ -21,9 +33,9 @@ runs:
     # Authenticate onto JIRA
     - uses: atlassian/gajira-login@master
       env:
-        JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-        JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
-        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        JIRA_BASE_URL: ${{ inputs.jira-base-url }}
+        JIRA_USER_EMAIL: ${{ inputs.jira-user-email }}
+        JIRA_API_TOKEN: ${{ inputs.jira-api-token }}
     
     # Extracts the JIRA issue number from the branch name
     # The branch must math the 'XXXX/JIRA-00_MyBranchDescription' pattern

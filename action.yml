@@ -1,0 +1,47 @@
+name: 'Update JIRA Issue'
+description: 'Extract jira issue ID from branch name and updates the associated issue'
+inputs:
+  jira-status:  
+    description: 'New JIRA status'
+    required: true
+    default: 'Dev in progress'
+outputs:
+  issue-id:
+    description: "ID of the JIRA issue that was updated"
+    value: ${{ steps.extract_jira_id.outputs.id }}
+runs:
+  using: "composite"
+  steps:
+    # Extract current branch name
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+
+    # Authenticate onto JIRA
+    - uses: atlassian/gajira-login@master
+      env:
+        JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+        JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+    
+    # Extracts the JIRA issue number from the branch name
+    # The branch must math the 'XXXX/JIRA-00_MyBranchDescription' pattern
+    # where XXXX is your folder like 'feat', and JIRA-00 the ID of the JIRA
+    # issue you want updated
+    - name: Extract JIRA issue name
+      shell: bash
+      id: extract_jira_id
+      run: |
+        jiraId=${{ steps.extract_branch.outputs.branch }}
+        jiraId=${jiraId%_*}
+        jiraId=${jiraId#*/}
+        echo $jiraId
+        echo "##[set-output name=id;]$(echo $jiraId)"
+    
+    # Actually change the JIRA issue status
+    - name: Transition issue
+      uses: atlassian/gajira-transition@master
+      with:
+        issue: ${{ steps.extract_jira_id.outputs.id }}
+        transition: ${{ inputs.jira-status }}

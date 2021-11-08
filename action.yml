@@ -1,6 +1,10 @@
 name: 'Update JIRA Issue'
 description: 'Extract jira issue ID from branch name and updates the associated issue'
 inputs:
+  git-ref:
+    description: 'Git reference (variable with the branch name)'
+    required: true
+    default: ''
   jira-base-url:  
     description: 'JIRA base URL like https://the-ring-io.atlassian.net/'
     required: false
@@ -27,7 +31,7 @@ runs:
     # Extract current branch name
     - name: Extract branch name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      run: echo "##[set-output name=branch;]$(echo ${{ inputs.git-ref }})"
       id: extract_branch
 
     # Authenticate onto JIRA

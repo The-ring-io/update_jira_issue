@@ -17,6 +17,9 @@ Example of call:
     - name: Update JIRA status
       uses: The-ring-io/update_jira_issue@v1
       with:
+        # This is value containing the github reference that contains your banch name
+        # Should be pretty much all the time the value in the example below
+        git-ref: ${GITHUB_REF#refs/heads/}
         # This is the base URL of your company's JIRA server like https://the-ring-io.atlassian.net/
         jira-base-url: ${{ secrets.JIRA_BASE_URL }}
         # This is the JIRA Api token value, used for the webservice calls made to change issue statuses

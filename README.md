@@ -15,7 +15,7 @@ Example of call:
 
 ```yaml
     - name: Update JIRA status
-      uses: The-ring-io/update_jira_issue@v1
+      uses: The-ring-io/update_jira_issue@v2
       with:
         # This is value containing the github reference that contains your banch name
         # Should be pretty much all the time the value in the example below

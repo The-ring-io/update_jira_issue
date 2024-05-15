@@ -31,7 +31,7 @@ runs:
     # Extract current branch name
     - name: Extract branch name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${{ inputs.git-ref }})"
+      run: echo "branch=$(echo ${{ inputs.git-ref }})" >> $GITHUB_OUTPUT
       id: extract_branch
 
     # Authenticate onto JIRA
@@ -53,8 +53,8 @@ runs:
         jiraId=${jiraId%_*}
         jiraId=${jiraId#*/}
         echo $jiraId
-        echo "##[set-output name=id;]$(echo $jiraId)"
-    
+        echo "id=$(echo $jiraId)" >> $GITHUB_OUTPUT
+
     # Actually change the JIRA issue status
     - name: Transition issue
       uses: atlassian/gajira-transition@master
